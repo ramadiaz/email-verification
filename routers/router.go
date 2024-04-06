@@ -26,7 +26,7 @@ func CompRouters(api *gin.RouterGroup) {
 	compService := services.NewServices(compRepository)
 	compHandler := handlers.NewCompHandlers(compService)
 
-	print(compHandler)
+	api.POST("/send", compHandler.GetEmail)
 
 
 }
