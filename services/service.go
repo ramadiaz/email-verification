@@ -3,7 +3,6 @@ package services
 import (
 	"email-verification/repositories"
 	"fmt"
-	"log"
 	"math/rand"
 	"os"
 	"strconv"
@@ -31,10 +30,14 @@ func (s *compServices) EmailSend(destination string) error {
 
 	token := strconv.Itoa(randomNumber)
 
+	err := s.repo.InsertToken(destination, token)
+	if err != nil{
+		return err
+	}
 
-	err := godotenv.Load()
+	err = godotenv.Load()
 	if err != nil {
-	  log.Fatal("Error loading .env file")
+	  return err
 	}
   
 	email := os.Getenv("SMTP_EMAIL")
