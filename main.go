@@ -1,10 +1,12 @@
 package main
 
 import (
+	"email-verification/routers"
 	"log"
 	"os"
 	"strconv"
 
+	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"gopkg.in/gomail.v2"
 )
@@ -18,9 +20,10 @@ func main() {
 	email := os.Getenv("SMTP_EMAIL")
 	password := os.Getenv("SMTP_PASSWORD")
 	server := os.Getenv("SMTP_SERVER")
-	port := os.Getenv("SMTP_PORT")
+	smtpPort := os.Getenv("SMTP_PORT")
+	port := os.Getenv("PORT")
 
-	i, err := strconv.Atoi(port)
+	i, err := strconv.Atoi(smtpPort)
 	if err != nil{
 		panic(err)
 	}
@@ -40,4 +43,12 @@ func main() {
 	if err := d.DialAndSend(m); err != nil {
 		log.Fatalf("Failed to send email: %v", err)
 	}
+
+	r := gin.Default()
+
+	api := r.Group("/api")
+
+	routers.CompRouters(api)
+
+	r.Run(":" + port)
 }
