@@ -15,6 +15,7 @@ import (
 type CompServices interface {
 	TokenSend(destination string) error
 	TokenVerify(email string, token string) error 
+	RegistUser(email string, password string) error
 }
 
 type compServices struct {
@@ -83,6 +84,15 @@ func (s *compServices) TokenVerify(email string, token string) error {
 	}
 
 	err = s.repo.VerifyEmail(email)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *compServices) RegistUser(email string, password string) error {
+	err := s.repo.RegistUser(email, password)
 	if err != nil {
 		return err
 	}

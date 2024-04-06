@@ -11,6 +11,7 @@ type CompRepositories interface {
 	InsertToken(email string, token string) error
 	GetUser(email string) (*entities.Users, error)
 	VerifyEmail(email string) error
+	RegistUser(email string, password string) error
 }
 
 type compRepositories struct {
@@ -81,5 +82,14 @@ func (r *compRepositories) VerifyEmail(email string) error {
 		return err
 	}
 
+	return nil
+}
+
+func (r *compRepositories) RegistUser(email string, password string) error {
+	_, err := r.DB.Exec("INSERT INTO Users (Email, Password) VALUES(@p1, @p2)", email, password)
+	if err != nil {
+		return err
+	}
+	
 	return nil
 }

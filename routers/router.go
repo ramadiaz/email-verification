@@ -28,5 +28,6 @@ func CompRouters(api *gin.RouterGroup) {
 
 	api.POST("/get-token", compHandler.GetToken)
 	api.POST("/verify-token", compHandler.VerifyToken)
+	api.POST("/register-user", compHandler.RegistUser)
 
 }
