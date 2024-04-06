@@ -26,7 +26,7 @@ func CompRouters(api *gin.RouterGroup) {
 	compService := services.NewServices(compRepository)
 	compHandler := handlers.NewCompHandlers(compService)
 
-	api.POST("/send", compHandler.GetEmail)
-
+	api.POST("/get-token", compHandler.GetToken)
+	api.POST("/verify-token", compHandler.VerifyToken)
 
 }

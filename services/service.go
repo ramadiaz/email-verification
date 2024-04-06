@@ -2,6 +2,7 @@ package services
 
 import (
 	"email-verification/repositories"
+	"errors"
 	"fmt"
 	"math/rand"
 	"os"
@@ -12,7 +13,8 @@ import (
 )
 
 type CompServices interface {
-	EmailSend(destination string) error
+	TokenSend(destination string) error
+	TokenVerify(email string, token string) error 
 }
 
 type compServices struct {
@@ -25,7 +27,7 @@ func NewServices(r repositories.CompRepositories) *compServices {
 	}
 }
 
-func (s *compServices) EmailSend(destination string) error {
+func (s *compServices) TokenSend(destination string) error {
 	randomNumber := rand.Intn(900000) + 100000
 
 	token := strconv.Itoa(randomNumber)
@@ -64,6 +66,24 @@ func (s *compServices) EmailSend(destination string) error {
 
 	// Send the email
 	if err := d.DialAndSend(m); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *compServices) TokenVerify(email string, token string) error {
+	data, err := s.repo.GetUser(email)
+	if err != nil {
+		return err
+	}
+
+	if (data.Token != token) {
+		return errors.New("invalid or expired verification code")
+	}
+
+	err = s.repo.VerifyEmail(email)
+	if err != nil {
 		return err
 	}
 

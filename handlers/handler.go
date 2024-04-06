@@ -18,10 +18,10 @@ func NewCompHandlers(s services.CompServices) *compHanders {
 	}
 }
 
-func (h *compHanders) GetEmail(c *gin.Context) {
+func (h *compHanders) GetToken(c *gin.Context) {
 	email := c.PostForm("email")
 
-	err := h.service.EmailSend(email)
+	err := h.service.TokenSend(email)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, dto.Response{Error: err.Error()})
 		return
@@ -29,4 +29,19 @@ func (h *compHanders) GetEmail(c *gin.Context) {
 
 	response := dto.Response{Message: "Email sucessfully sent!"}
 	c.JSON(http.StatusOK, response)
+}
+
+func (h *compHanders) VerifyToken(c  *gin.Context) {
+	email := c.PostForm("email")
+	token := c.PostForm("token")
+
+	err := h.service.TokenVerify(email, token)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, dto.Response{Error: err.Error()})
+		return
+	}
+
+	response := dto.Response{Message: "Email sucessfully verified!"}
+	c.JSON(http.StatusOK, response)
+
 }

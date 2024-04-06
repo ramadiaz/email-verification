@@ -5,6 +5,6 @@ type Users struct {
 	Email      string
 	Password   string
 	IsVerified bool
-	Token      int
+	Token      string
 	CreatedAt  string
 }
