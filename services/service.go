@@ -72,21 +72,49 @@ func (s *compServices) TokenSend(destination string) error {
 		`<html>
 			<head>
 				<title>Email Verification</title>
+				<style>
+					body {
+						font-family: Arial, sans-serif;
+						margin: 0;
+						padding: 0;
+					}
+					.container {
+						max-width: 600px;
+						margin: 20px auto;
+						padding: 20px;
+						border: 1px solid #ccc;
+						border-radius: 5px;
+						background-color: #f9f9f9;
+					}
+					.title {
+						font-size: 24px;
+						font-weight: bold;
+						margin-bottom: 20px;
+					}
+					.message {
+						margin-bottom: 20px;
+					}
+					.footer {
+						margin-top: 20px;
+						font-size: 14px;
+						color: #666;
+					}
+				</style>
 			</head>
 			<body>
-				<p>Dear User,</p>
-				<p>
-					Thank you for registering with our platform. To complete your registration, please use the following verification code:
-				</p>
-				<p style="font-size: 24px; font-weight: bold;">%s</p>
-				<p>
-					This code will expire in 24 hours. If you did not request this verification, please ignore this email.
-				</p>
-				<p>Best regards,<br>Your Company Team</p>
+				<div class="container">
+					<p class="title">Email Verification</p>
+					<p class="message">Dear User,</p>
+					<p class="message">Thank you for registering with our platform. To complete your registration, please use the following verification code:</p>
+					<p class="message" style="font-size: 24px; font-weight: bold;">%s</p>
+					<p class="message">This code will expire in 24 hours. If you did not request this verification, please ignore this email.</p>
+					<p class="footer">Best regards,<br>Your Company Team</p>
+				</div>
 			</body>
 		</html>`,
 		token,
 	)
+	
 	
 
 	// Set up the email message``
