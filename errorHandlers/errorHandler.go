@@ -1,4 +1,4 @@
-package errorhandlers
+package errorHandlers
 
 type CustomError struct {
 	Message string

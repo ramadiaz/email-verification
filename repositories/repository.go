@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"email-verification/config"
 	"email-verification/entities"
-	errorHandlers "email-verification/errorHandlers"
+	"email-verification/errorHandlers"
 	"log"
 )
 
