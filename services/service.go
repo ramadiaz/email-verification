@@ -53,7 +53,26 @@ func (s *compServices) TokenSend(destination string) error {
 		return err
 	}
 
-	message := fmt.Sprintf("This is the <b>VERIFICATION CODE: %s</b> message body.", token)
+	message := fmt.Sprintf(
+		`<html>
+			<head>
+				<title>Email Verification</title>
+			</head>
+			<body>
+				<p>Dear User,</p>
+				<p>
+					Thank you for registering with our platform. To complete your registration, please use the following verification code:
+				</p>
+				<p style="font-size: 24px; font-weight: bold;">%s</p>
+				<p>
+					This code will expire in 24 hours. If you did not request this verification, please ignore this email.
+				</p>
+				<p>Best regards,<br>Your Company Team</p>
+			</body>
+		</html>`,
+		token,
+	)
+	
 
 	// Set up the email message``
 	m := gomail.NewMessage()
