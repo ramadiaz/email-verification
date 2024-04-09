@@ -5,6 +5,7 @@ import (
 	"email-verification/config"
 	"email-verification/entities"
 	"email-verification/errorHandlers"
+	"fmt"
 	"log"
 )
 
@@ -64,25 +65,35 @@ func (r *compRepositories) InsertToken(email string, token string) error {
 }
 
 func (r *compRepositories) GetUser(email string) (*entities.Users, error) {
-    rows, err := r.DB.Query("SELECT * FROM Users WHERE Email = @p1", email)
-    if err != nil {
+	rows, err := r.DB.Query("SELECT * FROM Users WHERE Email = @p1", email)
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	var user *entities.Users
+	found := false
+
+	for rows.Next() {
+		var d entities.Users
+		err = rows.Scan(&d.Id, &d.Email, &d.Password, &d.IsVerified, &d.Token, &d.CreatedAt)
+		if err != nil {
+			return nil, err
+		}
+
+		user = &d
+		found = true
+	}
+
+	if !found {
+		err = &errorHandlers.CustomError{
+			Message: fmt.Sprintf("User with email %s not found", email),
+		}
         return nil, err
     }
-    defer rows.Close()
 
-    var user *entities.Users
-
-    for rows.Next() {
-        var d entities.Users
-        err = rows.Scan(&d.Id, &d.Email, &d.Password, &d.IsVerified, &d.Token, &d.CreatedAt)
-        if err != nil {
-            return nil, err
-        }
-
-        user = &d
-    }
-
-    return user, nil
+	return user, nil
 }
 
 func (r *compRepositories) VerifyEmail(email string) error {
@@ -97,14 +108,12 @@ func (r *compRepositories) VerifyEmail(email string) error {
 func (r *compRepositories) RegistUser(email string, password string) error {
 	_, err := r.DB.Exec("INSERT INTO Users (Email, Password) VALUES(@p1, @p2)", email, password)
 
-	
-
 	if err != nil {
 		err = &errorHandlers.CustomError{
 			Message: "Email already registered!",
 		}
 		return err
 	}
-	
+
 	return nil
 }

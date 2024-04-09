@@ -1,6 +1,7 @@
 package services
 
 import (
+	"email-verification/errorHandlers"
 	"email-verification/repositories"
 	"errors"
 	"fmt"
@@ -33,7 +34,21 @@ func (s *compServices) TokenSend(destination string) error {
 
 	token := strconv.Itoa(randomNumber)
 
-	err := s.repo.InsertToken(destination, token)
+	
+	data, err := s.repo.GetUser(destination)
+	if err != nil{
+		return err
+	}
+
+	if (data.IsVerified) {
+		err = &errorHandlers.CustomError{
+			Message: "Email already verified!",
+		}
+		return err
+	}
+
+
+	err = s.repo.InsertToken(destination, token)
 	if err != nil{
 		return err
 	}
