@@ -104,14 +104,15 @@ func (s *compServices) TokenSend(destination string) error {
 			<body>
 				<div class="container">
 					<p class="title">Email Verification</p>
-					<p class="message">Dear User,</p>
+					<p class="message">Dear %s,</p>
 					<p class="message">Thank you for registering with our platform. To complete your registration, please use the following verification code:</p>
 					<p class="message" style="font-size: 24px; font-weight: bold;">%s</p>
 					<p class="message">This code will expire in 24 hours. If you did not request this verification, please ignore this email.</p>
-					<p class="footer">Best regards,<br>Your Company Team</p>
+					<p class="footer">Best regards,<br>Wyvern Team</p>
 				</div>
 			</body>
 		</html>`,
+		destination,
 		token,
 	)
 	
@@ -121,7 +122,7 @@ func (s *compServices) TokenSend(destination string) error {
 	m := gomail.NewMessage()
 	m.SetHeader("From", email)
 	m.SetHeader("To", destination)
-	m.SetHeader("Subject", "Testing SMTP Email!")
+	m.SetHeader("Subject", "Email verification code!")
 	m.SetBody("text/html", message)
 
 	// Create a new SMTP client session
