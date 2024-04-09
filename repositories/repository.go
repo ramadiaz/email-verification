@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"email-verification/config"
 	"email-verification/entities"
+	errorHandlers "email-verification/errorHandlers"
 	"log"
 )
 
@@ -16,6 +17,14 @@ type CompRepositories interface {
 
 type compRepositories struct {
 	DB *sql.DB
+}
+
+type CustomError struct {
+	Message string
+}
+
+func (e *CustomError) Error() string {
+	return e.Message
 }
 
 func NewCompRepositories(DB *sql.DB) *compRepositories {
@@ -87,7 +96,13 @@ func (r *compRepositories) VerifyEmail(email string) error {
 
 func (r *compRepositories) RegistUser(email string, password string) error {
 	_, err := r.DB.Exec("INSERT INTO Users (Email, Password) VALUES(@p1, @p2)", email, password)
+
+	
+
 	if err != nil {
+		err = &errorHandlers.CustomError{
+			Message: "Email already registered!",
+		}
 		return err
 	}
 	
